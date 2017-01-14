@@ -1,0 +1,28 @@
+   proc sql;
+      select distinct memname into:dsnlist separated by "*" from dictionary.tables
+      where length(memname)=2 and libname="SDTM" and memname in (
+      select distinct memname from 
+      dictionary.columns
+      where name="VISITNUM" and libname="SDTM");
+   quit;
+
+
+%put &dsnlist.;
+%let dsncount=%sysfunc(countw(&dsnlist.,*));
+%put &dsncount.;
+
+%macro maxvisitnum;
+%do i=1 %to &dsncount.;
+   proc sql;
+      create table temp as
+      select "%scan(&dsnlist.,&i,*)" as domain length=2,max(visitnum) as visitnum
+      from 
+      sdtm.%scan(&dsnlist.,&i,*);
+   quit;
+   
+   proc append base=maxvisitnum data=temp force;
+   run;
+%end;
+
+%mend;
+%maxvisitnum;

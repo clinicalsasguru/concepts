@@ -1,0 +1,1 @@
+xcopy /t /e "D:\Home\dev\compound5" "D:\Home\dev\compound6"

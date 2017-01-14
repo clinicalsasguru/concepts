@@ -1,0 +1,164 @@
+'========================================================;
+'When group of functions
+'========================================================;
+
+
+'------------------------------;
+'numeric to character
+'------------------------------;
+
+Function whennc(oldval, newval, Optional newvar As String)
+If newvar = "" Then newvar = "newvar"
+ whennc = "     when (" & Trim(oldval) & ") " & Trim(newvar) & " =" & """" & Trim(newval) & """;"
+End Function
+
+
+'------------------------------;
+'character to character
+'------------------------------;
+
+Function whencc(oldval, newval, Optional newvar As String)
+If newvar = "" Then newvar = "newvar"
+ whencc = "     when (" & """" & Trim(oldval) & """" & ") " & Trim(newvar) & " =" & """" & Trim(newval) & """;"
+End Function
+
+
+'------------------------------;
+'numeric to numeric
+'------------------------------;
+
+Function whennn(oldval, newval, Optional newvar As String)
+If newvar = "" Then newvar = "newvar"
+ whennn = "     when (" & Trim(oldval) & ") " & Trim(newvar) & " =" & Trim(newval) & ";"
+End Function
+
+'------------------------------;
+'character to numeric
+'------------------------------;
+
+Function whencn(oldval, newval, Optional newvar As String)
+If newvar = "" Then newvar = "newvar"
+ whencn = "     when (" & """" & Trim(oldval) & """" & ") " & Trim(newvar) & " =" & Trim(newval) & ";"
+End Function
+
+
+
+'========================================================;
+'If based functions
+'========================================================;
+
+
+'------------------------------;
+'character to character
+'------------------------------;
+
+Function ifcc(oldval, newval, Optional oldvar As String, Optional newvar As String)
+oldval = UCase(oldval)
+If oldvar = "" Then oldvar = "oldvar"
+
+If newvar = "" Then newvar = "newvar"
+
+ ifcc = "     else if upcase(strip(" & Trim(oldvar) & "))= " & """" & Trim(oldval) & """" & " then " & Trim(newvar) & " =" & """" & Trim(newval) & """;"
+End Function
+
+'------------------------------;
+'character to numeric
+'------------------------------;
+
+Function ifcn(oldval, newval, Optional oldvar As String, Optional newvar As String)
+oldval = UCase(oldval)
+If oldvar = "" Then oldvar = "oldvar"
+
+If newvar = "" Then newvar = "newvar"
+
+ ifcn = "     else if upcase(strip(" & Trim(oldvar) & "))= " & """" & Trim(oldval) & """" & " then " & Trim(newvar) & " =" & Trim(newval) & ";"
+End Function
+
+'------------------------------;
+'numeric to numeric
+'------------------------------;
+
+Function ifnn(oldval, newval, Optional oldvar As String, Optional newvar As String)
+
+If oldvar = "" Then oldvar = "oldvar"
+
+If newvar = "" Then newvar = "newvar"
+
+ ifnn = "     else if " & Trim(oldvar) & "= " & Trim(oldval) & " then " & Trim(newvar) & " =" & Trim(newval) & ";"
+End Function
+
+'------------------------------;
+'numeric to character
+'------------------------------;
+
+
+Function ifnc(oldval, newval, Optional oldvar As String, Optional newvar As String)
+
+If oldvar = "" Then oldvar = "oldvar"
+
+If newvar = "" Then newvar = "newvar"
+
+ ifnc = "     else if " & Trim(oldvar) & "= " & Trim(oldval) & " then " & Trim(newvar) & " =" & """" & Trim(newval) & """;"
+End Function
+
+'------------------------------;
+'quote function
+'------------------------------;
+
+Function quote(text)
+quote = """" & text & """"
+End Function
+
+'------------------------------;
+'lengths function
+'------------------------------;
+
+Function lengths(variable, vartype, varlength)
+If Trim(vartype) = "N" Then vartype_temp = " "
+If Trim(vartype) = "C" Then vartype_temp = "$"
+
+lengths = "     " & Trim(variable) & Application.WorksheetFunction.Rept(" ", 9 - Len(Trim(variable))) & vartype_temp & Trim(varlength)
+
+
+End Function
+
+'------------------------------;
+'labels function
+'------------------------------;
+
+Function labels(variable, label)
+
+labels = "     " & Trim(variable) & Application.WorksheetFunction.Rept(" ", 15 - Len(Trim(variable))) & "=    """ & Trim(label) & """"
+
+
+End Function
+
+'------------------------------;
+'Varlist Function
+'------------------------------;
+
+Function varlist(tablename)
+Dim i As Integer
+'Dim breakchar As String
+numvars = Application.WorksheetFunction.CountIf(tablename, "*")
+For i = 1 To numvars
+
+'If (Application.WorksheetFunction.mod(i, 10) = 0) Then breakchar = Chr(10)
+varlist = Trim(varlist) & " " & Trim(tablename(i))
+Next i
+End Function
+
+'--------------------------------------------------------------------------------------------------------
+'***NEW FUNCTION***
+'Description: Separates Alphabetic and Numeric Data.  (i.e. Alpha 123, Alpha123)
+'             True or 1 will return alphabet, False or 0 will return numeric
+'Example:   A1 value is Rob12Schiele34
+'           =Sep(A1,1)      Returns:    RobSchiele
+'           =Sep(A1,0)      Returns:    1234
+Function Sep(txt As String, flg As Boolean) As String
+With CreateObject("VBScript.RegExp")
+    .Pattern = IIf(flg = True, "\d+", "\D+")
+    .Global = True
+    Sep = .Replace(txt, "")
+End With
+End Function

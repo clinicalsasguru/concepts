@@ -1,0 +1,13 @@
+%let path=my files paths goes here;
+filename temp "&path.\batch_run_2016-01-26T2255.xls";
+filename temp2 "&path.\batch_run_2016-01-21T0555.xls";
+
+ods package(newzip) open nopf;
+ods package(newzip) add file=temp ;
+ods package(newzip) add file=temp2 ;
+ods package(newzip) publish archive 
+  properties(
+   archive_name="testzip.zip" 
+   archive_path="&path."
+  );
+ods package(newzip) close;

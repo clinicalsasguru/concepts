@@ -1,0 +1,22 @@
+%let varlist=aestdtc aeendtc;
+
+%let nvars=%sysfunc(countw(&varlist));
+
+%macro rename;
+data check;
+   set sdtm.ae(keep=aestdtc aeendtc);
+   
+   %do i=1 %to &nvars;
+    rename  %scan(&varlist.,&i)= %scan(&varlist.,&i)_p;
+   %end;
+run;
+data check2;
+   set check;
+   %do j=1 %to &nvars;
+    %scan(&varlist.,&j)= input(%scan(&varlist.,&j)_p,yymmdd10.);
+   %end;
+run;
+%mend;
+options mprint;
+%rename;
+

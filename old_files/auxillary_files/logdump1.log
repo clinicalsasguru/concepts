@@ -1,0 +1,48 @@
+3891  dm log 'clear' explorer;
+3892  dm "vt intord final";
+3893  dm "var final";
+3894  dm "var final" continue;
+3895  dm
+3896  "DEXPORT final 'filename.xls' replace"
+3897  ;
+NOTE: File "D:\Lesson Files\auxillary_files\filename.xls" will be created if the export process
+      succeeds.
+NOTE: "FINAL" range/sheet was successfully created.
+3898  dm
+3899  "DEXPORT final 'filename.xls' replace"
+3900  ;
+NOTE: "FINAL" range/sheet was successfully created.
+3901  %let path=D:\Lesson Files\auxillary_files;
+3902  dm 'log; file "&path\logdump1.log" replace';
+3903
+3904  filename temp1 "&path\logdump1.log";
+3905  data test;
+3906      infile temp1 end=last;
+3907      input;
+3908      if index(_infile_,"ERROR") then errorcount+1;
+3909      if index(upcase(_infile_),"UNINIT") then uninitcount+1;
+3910      if last then do;
+3911      put "Number of errors" errorcount;
+3912      put "Number of uninitialised" uninitcount;
+3913
+3914      end;
+3915  run;
+
+NOTE: The infile TEMP1 is:
+      Filename=D:\Lesson Files\auxillary_files\logdump1.log,
+      RECFM=V,LRECL=256,File Size (bytes)=516,
+      Last Modified=21Mar2015:22:44:46,
+      Create Time=21Mar2015:22:15:44
+
+Number of errors0
+Number of uninitialised0
+NOTE: 15 records were read from the infile TEMP1.
+      The minimum record length was 7.
+      The maximum record length was 95.
+NOTE: The data set WORK.TEST has 15 observations and 2 variables.
+NOTE: DATA statement used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.00 seconds
+
+
+3916  %let path=D:\Lesson Files\auxillary_files;

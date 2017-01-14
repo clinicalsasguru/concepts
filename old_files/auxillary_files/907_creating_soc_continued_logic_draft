@@ -1,0 +1,67 @@
+dm log 'clear';
+dm lst 'clear';
+dm log 'preview';
+
+proc datasets library=work memtype=data kill;
+run;
+
+%macro closevts / cmd; 
+  %local i; 
+  %do i=1 %to 20;
+    next "viewtable:"; end; 
+  %end; 
+%mend;
+
+dm "keydef F12 '%NRSTR(%closevts);'";
+
+data temp;
+   retain c1 c2 c3 "0";
+   do i=1 to 10;
+      soc=strip("SOC "||put(i,z2.));
+         do j=1 to 8;
+            pt=strip("PT "||put(j,z2.));
+            output;
+         end;
+   end;
+run;
+data temp;
+   set temp;
+   by soc pt;
+   if not first.soc then c0= "  "||strip(pt);
+   else c0=soc;
+run;
+
+proc report data=temp nowd headline headskip ps=38;
+   columns i soc j pt c0 c1 c2 c3;
+   define i/ order noprint;
+   define j / order noprint;
+   define soc/ order noprint;
+   define pt/ order noprint;
+   define c0/ "SOC" "  PT" width=25;
+   
+   break after soc/ skip;
+   
+   compute before _page_;
+      line @1 50*'-';
+   endcomp;
+
+   compute before _page_;
+      length text $50;
+      if strip(soc) ne strip(c0) and _page_ then do;
+      text=strip(soc)||" (Continued)";
+      length=50;
+      end;
+      else do;
+      length=0;
+      end;
+      line @1 text $varying. length;
+   endcomp;
+
+   compute after _page_;
+      line @1 50*'-';
+   endcomp;
+
+   
+run;
+
+   
